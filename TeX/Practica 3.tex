@@ -350,7 +350,8 @@ Entonces podemos escribir nuestro problema como:
 
 
     Ahora verifiquemos el maximo paso del tiempo que podemos dar dado
-\(h = 1/20\). Podemos escribir el esquema de forma matricial de la
+\(h = 1/20\).Tomando únicamente las condiciones iniciales y de frontera tipo
+Dirichlet, podemos escribir el esquema de forma matricial de la
 siguiente forma: \[ W^{j+1}=AW^j+S^j \] donde:
 
 \begin{align*}
@@ -367,7 +368,7 @@ S^j &=\begin{pmatrix}
     \vdots  \\
     0 \\
     \sigma w_M^j
-\end{pmatrix} \in \mathbb{R}^{M+1}
+\end{pmatrix} \in \mathbb{R}^{M-1}
 \end{align*}
 
 Tomando únicamente las condiciones iniciales y de frontera tipo
@@ -382,7 +383,7 @@ Por lo tanto el máximo paso estable teórico en el tiempo es
 \(k=\frac{\pi}{800}\). Esto se debe a que
 \(\rho (A) =max\quad \vert \lambda_i \vert \leq 1\) para que sea
 estable, donde $ \lambda $ son los eigenvalores de A. Por lo tanto se
-cumple la definición de estabilidad en el sentido de Von Neuamnn.
+cumple la definición de estabilidad en el sentido de Von Neumann.
 
 Ahora apliquemos el metodo explicito con 20 pasos en el espacio
 (\(h = 1/20\)) y 256 pasos en el tiempo (\(k = 1/256\)), y veamos el
