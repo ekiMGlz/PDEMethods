@@ -55,47 +55,55 @@ plt.show()
 #Tabla de errores con M = [10, 20, 40], N = [16, 64, 256]
 h = [10, 20, 40]
 k = [16, 64, 256]
-Errores = []
-for M in h:
-    for N in k:
-        W, X, T = pdesolver.implicitHeat(eq, Ix, It, M, N)
-        U = u(X, 1)
-        Errores.append(max(abs(U-W[:,-1])))
+data = []
 
-data = [['1/10'], ['1/20'], ['1/40']]
-data[0].extend(Errores[:3])
-data[1].extend(Errores[3:6])
-data[2].extend(Errores[6:])
-header = ['\diagbox{h}{k}', '1/16', '1/64', '1/256']
-print(ls.latexTable(header, data, 'r|rrr'))
+for i in range(3):
+    M = h[i]
+    N = k[i]
+    W, X, T = pdesolver.implicitHeat(eq, Ix, It, M, N)
+    U = u(X, 1)
+    maxError = max(abs(U-W[:,-1]))
+    eoc = 'NaN' if i == 0 else np.log(maxError/prevError)/np.log(h[i-1] / M)
+    data.append([ maxError, eoc ])
+    prevError = maxError
+
+data = [['1/10', '1/16'] + data[0], ['1/20', '1/64'] + data[1], ['1/40', '1/256'] + data[2]]
+header = ['h', 'k', 'Error', 'erc']
+print(ls.latexTable(header, data, 'cc|rr'))
 
 #Tabla de errores con M = [10, 20, 40], N = [10, 20, 40]
 h = [10, 20, 40]
 k = [10, 20, 40]
-Errores = []
-for M in h:
-    for N in k:
-        W, X, T = pdesolver.implicitHeat(eq, Ix, It, M, N)
-        U = u(X, 1)
-        Errores.append(max(abs(U-W[:,-1])))
+data = []
 
-data = [['1/10'], ['1/20'], ['1/40']]
-data[0].extend(Errores[:3])
-data[1].extend(Errores[3:6])
-data[2].extend(Errores[6:])
-header = ['\diagbox{h}{k}', '1/10', '1/20', '1/40']
-print(ls.latexTable(header, data, 'r|rrr'))
+for i in range(3):
+    M = h[i]
+    N = k[i]
+    W, X, T = pdesolver.implicitHeat(eq, Ix, It, M, N)
+    U = u(X, 1)
+    maxError = max(abs(U-W[:,-1]))
+    eoc = 'NaN' if i == 0 else np.log(maxError/prevError)/np.log(h[i-1] / M)
+    data.append([ maxError, eoc ])
+    prevError = maxError
+
+data = [['1/10', '1/10'] + data[0], ['1/20', '1/20'] + data[1], ['1/40', '1/40'] + data[2]]
+header = ['h', 'k', 'Error', 'erc']
+print(ls.latexTable(header, data, 'cc|rr'))
 
 #Tabla de errores con M = 10, N = [25, 50, 100, 200]
 M = 10
 k = [25, 50, 100, 200]
-Errores = []
-for N in k:
+data = []
+
+for i in range(4):
+    N = k[i]
     W, X, T = pdesolver.implicitHeat(eq, Ix, It, M, N)
     U = u(X, 1)
-    Errores.append(max(abs(U-W[:,-1])))
+    maxError = max(abs(U-W[:,-1]))
+    eoc = 'NaN' if i == 0 else np.log(maxError/prevError)/np.log(k[i-1] / N)
+    data.append([ maxError, eoc ])
+    prevError = maxError
 
-data = [['1/10']]
-data[0].extend(Errores)
-header = ['\diagbox{h}{k}', '1/25', '1/50', '1/100', '1/200']
-print(ls.latexTable(header, data, 'r|rrrr'))
+data = [['1/25'] + data[0], ['1/50'] + data[1], ['1/100'] + data[2], ['1/200'] + data[3]]
+header = ['k', 'Error', 'erc']
+print(ls.latexTable(header, data, 'c|rr'))
