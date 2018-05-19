@@ -416,6 +416,154 @@ la aproximada:
     \includegraphics{fig1_2.png}
     \end{center}
     
+    \section*{Ejercicio 2}
+    Dado el PVIF (\ref{eq:1}) planteado anteriormente, veamos el
+comportamiento del metodo implicito para su aproximacion. Primero observemos una grafica de la aproximacion usando 20 pasos en el espacio (\(h = 1/20\)) y 10 pasos en el tiempo (\(k = 1/10\)):
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}1}]:} \PY{n}{M} \PY{o}{=} \PY{l+m+mi}{20}
+        \PY{n}{N} \PY{o}{=} \PY{l+m+mi}{10}        
+        \PY{n}{W}\PY{p}{,} \PY{n}{X}\PY{p}{,} \PY{n}{T} \PY{o}{=} \PY{n}{pdesolver}\PY{o}{.}\PY{n}{implicitHeat}\PY{p}{(}\PY{n}{eq}\PY{p}{,} \PY{n}{Ix}\PY{p}{,} \PY{n}{It}\PY{p}{,} \PY{n}{M}\PY{p}{,} \PY{n}{N}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \includegraphics{fig2_1.png}
+    \end{center}
+
+    \begin{center}
+    \includegraphics{fig2_2.png}
+    \end{center}
+    
+    Vemos que con los mismos pasos en el tiempo, pero mas de 20 veces menos
+los pasos en el tiempo, el metodo implicito obtiene una aproximacion
+comparable a la del metodo explicito. Ahora veamos como varia el error
+al considerar los pasos \(k = \{1/16, 1/64, 1/256\}\) y
+\(h = \{ 1/10, 1/20, 1/40 \}\):
+
+\begin{center} 
+    \begin{tabular}{cc|rr} 
+ \hline 
+h & k & Error & erc \\ \hline 
+1/10 & 1/16 & 0.05783108269993153 & NaN \\ 
+1/20 & 1/64 & 0.014939536443073914 & 1.952709728546003 \\ 
+1/40 & 1/256 & 0.0037665127468114214 & 1.987834066736966 \\ 
+\hline 
+ \end{tabular}
+\end{center}
+    En la teoria, el error se comporta como: \[Error(h,k)=O(h^2 + k)\]
+
+    Podemos ver a \(k\) como función de \(h\) de la siguiente forma:
+\[k(h)=\frac{25}{4}h^2\]
+
+    Sustituyendo la expresión anterior en el error:
+\[Error(h,k)=O(h^2+k)=O(h^2+\frac{25}{4}h^2)\approx O(h^2)\]
+
+    Por otro lado, si calculamos el ``\(erc\)''
+(\textit{estimated rate of convergence}) dado por :
+\[erc_i:=\frac{\ln(Error(h_i)/Error(h_{i+1}))}{\ln(h_i/h_{i+1})}\]
+
+    con \(i\in \{ 1,2 \}\) debe ser $erc\approx 2 $ dado que
+\(Error(h)=O(h^2)\) es de orden 2. En la tabla observamos que en efecto \textit{erc} es aproximadamente 2. Por lo tanto, en este caso el error en función de $h$, se reduce de manera cuadrática, entonces nuestros resultados son consistentes con la teoría.
+
+    Ahora consideremos los pasos \(k = h = \{ 1/10, 1/20, 1/40 \}\):
+
+\begin{center}
+    \begin{tabular}{cc|rr} 
+ \hline 
+h & k & Error & erc \\ \hline 
+1/10 & 1/10 & 0.08096946676799946 & NaN \\ 
+1/20 & 1/20 & 0.03789343824335091 & 1.0954299285102875 \\ 
+1/40 & 1/40 & 0.018281192075090623 & 1.0515878997074606 \\ 
+\hline 
+ \end{tabular}
+\end{center}
+
+    Podemos observar que:
+\[Error(h_{2},k_{2})=0.03789343824335091\approx\left(\frac{1}{2}\right)0.08096946676799946=\left(\frac{1}{2}\right)Error(h_{1},k_{1})\]
+
+    \[Error(h_{3},k_{3})=0.018281192075090623\approx\left(\frac{1}{2}\right)0.03789343824335091=\left(\frac{1}{2}\right)Error(h_{2},k_{2})\]
+
+    Como se mencionó anteriormente, el error se comporta de la siguiente
+manera: \[Error(h,k)=O(h^2 + k)\]
+
+    En este caso, como \(h_i=k_i\) entonces:
+\[Error(h,k)=O(h^2 + k)= O(h^2 + k) \approx O(k):=Error(k)\]
+
+    Por lo tanto, para \(h=k\), teóricamente el error se comporta de manera
+lineal dado que \(Error(h)=O(h)\) es de orden 1. En efecto, en la tabla observamos que el $erc se acerca a 1$
+
+    En conclusión, el error en función de \(h\) dado
+\(h=k\),$Error(h)=O(h) $, se reduce de manera lineal, entonces
+nuestros resultados son consistentes con la teoría.
+
+    Finalmente tomemos los pasos \(h = 1/10\),
+\(k = \{1/25, 1/50, 1/100, 1/200\}\):
+
+    
+
+\begin{center}
+    \begin{tabular}{c|rrr} 
+ \hline 
+k & Error & $E_i/E_{i-1}$ & erc \\ \hline 
+1/25 & 0.043252578458086034 & NaN & NaN \\ 
+1/50 & 0.02983931506749922 & 0.6898852306901205 & 0.5355717197880779 \\ 
+1/100 & 0.022968343027896996 & 0.7697342575035833 & 0.37756763811094635 \\ 
+1/200 & 0.019491123414336453 & 0.8486081643182896 & 0.23682953626242717 \\ 
+\hline 
+ \end{tabular}
+\end{center}
+    
+
+    Recordemos que si, \(\quad h^2 < k\):
+\[Error(h,k)=O(h^2 + k)\approx O(k)\]
+
+Esto indica que en teoría el error debería decrecer linealmente con k, o
+bien, al duplicar el número de pasos en el tiempo esperamos que el error
+se reduzca a la mitad.
+
+Sin embargo, en este ejemplo notamos que el error no parece decrecer
+linealmente. En los primeros pasos, la reduccion del error es
+consistente con la teoria, pero a partir de \(k = 1/100\) esto no es
+cierto. Aún más, parece que \(Error(h, k_i)/Error(h,k_{i-1})\) se acerca
+a 1 cada iteracion. ¿A qué se debe esto? ¿Acaso la teoría está mal?
+
+Todo se explica al considerar el valor de h. Si se tomara un paso en el
+espacio extremadamente pequeño, como \(h=\frac{1}{100}\), se puede
+comprobar que, efectivamente, el error se reduce aproximadamente a la
+mitad en cada iteración, ya que \(h^2\) es insignificante comparado con
+k.
+
+\begin{center}
+    \begin{tabular}{c|rrr} 
+ \hline 
+k & Error & $E_i/E_{i-1}$ & erc \\ \hline 
+1/25 & 0.027446399165031332 & NaN & NaN \\ 
+1/50 & 0.014027218685576865 & 0.5110768301966745 & 0.9683879070281181 \\ 
+1/100 & 0.007151869447247056 & 0.5098565587061664 & 0.9718366735889642 \\ 
+1/200 & 0.0036721007159067343 & 0.513446273452352 & 0.9617147727334843 \\ 
+\hline 
+ \end{tabular}
+\end{center}
+    
+
+    Vemos que en efeto, el erc esta alrededor de 1, lo cual implica
+\(Error(h,k_i) \approx O(k_i)\)
+
+Ahora, regresando al ejemplo original, observamos que
+\(h^2 = \frac{1}{100}\), y, aun que inicialmente
+\(k_1 =\frac{1}{25} << h^2\), después de dos iteraciones tenemos que
+\(k_3 = \frac{1}{100}=h^2\), por lo que ya no es cierto que
+\(Error(h,k)=O(h^2 + k)\approx O(k)\)
+
+Para las iteraciones consecuentes se cumple que \(k_i < h^2\), por lo
+que seguir disminuyendo la magnitud de el paso en el tiempo tiene poco
+efecto sobre el error máximo, ya que en estos casos \(h^2=1/100\) es el
+factor que afecta al error en mayor magnitud y al mantener \(h=1/10\)
+constante, el error disminuye poco ante cambios en \(k\). Por esto, la
+razon de los errores consecutivos se acerca a 1 cada paso. Por esto
+podemos concluir que el ejemplo, a pesar de que parezca contradecir la
+teoria, en efecto es consistente con la teoria.
 
     % Add a bibliography block to the postdoc
     
